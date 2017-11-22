@@ -29,7 +29,7 @@ export default class EnterCode extends React.Component {
                            placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
                            onChangeText={(text) => this.setState({text})} value={this.state.text}  />
                 <TouchableHighlight onPress={() => navigate('ENTER_JOB')} underlayColor={'white'}>
-                    <Text style={styles.back}>SEND CODE</Text>
+                    <Text style={styles.back}>JOIN</Text>
                 </TouchableHighlight>
             </KeyboardAvoidingView>
         );

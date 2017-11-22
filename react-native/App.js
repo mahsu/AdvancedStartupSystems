@@ -4,12 +4,14 @@ import {StyleSheet, Text, TextInput, View, KeyboardAvoidingView, Image, Activity
 import CodeScreen from './js/EnterCode';
 import PhoneScreen from './js/EnterPhone';
 import JobScreen from './js/EnterJob';
+import AcceptScreen from './js/Acceptance'
 import { StackNavigator } from 'react-navigation';
 
 const SimpleApp = StackNavigator({
     ENTER_PHONE: {screen: PhoneScreen},
     ENTER_CODE: {screen: CodeScreen},
-    ENTER_JOB: {screen: JobScreen}
+    ENTER_JOB: {screen: JobScreen},
+    ACCEPT: {screen: AcceptScreen},
 });
 export default SimpleApp;
 

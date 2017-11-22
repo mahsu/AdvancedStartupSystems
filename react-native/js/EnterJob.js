@@ -1,24 +1,30 @@
 import React from 'react';
 import { View, StyleSheet,Text } from 'react-native';
 import MyMap from './MyMap';
+import MovingScreen  from './Move';
+import HaulingScreen from './Haul';
+import { TabNavigator } from 'react-navigation';
 
-export default class EnterJob extends React.Component {
 
 
-        render() {
-            var {navigate} = this.props.navigation;
-            return (
-            <View style={styles.container}>
-                <View style={styles.map}>
-                    <MyMap/>
-                </View>
-                <View style={{flex: 3}}>
-                    <Text>Other Components to go here</Text>
-                </View>
-            </View>
-            );
-        };
-}
+
+const EnterJob = TabNavigator({
+    Moving: {screen: MovingScreen,},
+    Hauling: {screen: HaulingScreen,},
+}, {
+    tabBarPosition: 'bottom',
+    animationEnabled: true,
+    tabBarOptions: {
+        activeTintColor: '#ff8d8d',
+        style: {
+            backgroundColor: '#e5ecea',
+        },
+        inactiveTintColor: '#222',
+    },
+
+});
+
+export default EnterJob;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
