@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         color: '#010c30',
         textAlign: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#010c30',
         width: 200,
     },
     back:{

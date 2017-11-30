@@ -1,7 +1,7 @@
 {
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 58712,
   "expoServerNgrokUrl": "https://zv-uz4.mahsu.react-native.exp.direct",
   "packagerNgrokUrl": "https://packager.zv-uz4.mahsu.react-native.exp.direct",
   "ngrokPid": 40547
