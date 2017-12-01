@@ -1,10 +1,18 @@
 import React from 'react';
 import {StyleSheet, Text, TextInput, View, KeyboardAvoidingView, Image, ActivityIndicator, TouchableHighlight} from 'react-native';
+import PropTypes from 'prop-types';
 
-export default class EnterPhone extends React.Component {
-    static navigationOptions = {
-        header: null,
-    }
+
+export default class EnterAuth extends React.Component {
+
+    static propTypes = {
+        onSubmit: PropTypes.func,
+        textBoxLabel: PropTypes.string,
+        buttonLabel: PropTypes.string
+    };
+
+    static defaultProps = {};
+
 
     constructor(props) {
         super(props);
@@ -13,25 +21,28 @@ export default class EnterPhone extends React.Component {
         }
     }
 
-    onPhoneNumber = (inputText) => {
-        var {navigate} = this.props.navigation;
+    onPress = async () => {
+        if (typeof this.props.onSubmit === 'function') {
+            if (await this.props.onSubmit(this.state.text)) {
+                console.log("valid authentication");
+                this.setState({text:""});
+            } else {
+                console.log("Invalid authentication");
+            }
 
-        () => navigate('ENTER_CODE');
-
-        console.log(this.props);
+        }
     };
 
     render() {
-        var {navigate} = this.props.navigation;
         return (
             <KeyboardAvoidingView behavior={'padding'}
                                   style={[styles.centeredView, {backgroundColor: 'white', padding: 40}]}>
 
-                <TextInput keyboardType={'numeric'} style={styles.phoneNumberInput} placeholder={"Enter Number"}
+                <TextInput keyboardType={'numeric'} style={styles.phoneNumberInput} placeholder={this.props.textBoxLabel}
                            placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
                            onChangeText={(text) => this.setState({text})} value={this.state.text}  />
-                <TouchableHighlight onPress={() => navigate('ENTER_CODE')} underlayColor={'white'}>
-                    <Text style={styles.back}>SEND CODE</Text>
+                <TouchableHighlight onPress={() => this.onPress()} underlayColor={'white'}>
+                    <Text style={styles.back}>{this.props.buttonLabel}</Text>
                 </TouchableHighlight>
             </KeyboardAvoidingView>
         );
