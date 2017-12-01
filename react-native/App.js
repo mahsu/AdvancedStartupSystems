@@ -4,8 +4,10 @@ import {Root} from 'native-base';
 
 import EnterAuth from './js/components/EnterAuth';
 import JobScreen from './js/EnterJob';
-import AcceptScreen from './js/Acceptance'
+import AcceptScreen from './js/Acceptance';
 import { StackNavigator } from 'react-navigation';
+
+import {endpoint} from "./src/util";
 
 const AppNavigator = StackNavigator({
     ENTER_JOB: {screen: JobScreen},
@@ -20,7 +22,8 @@ export default class App extends React.Component {
 
         this.state = {
             fontsAreLoaded: false,
-            authState: AUTH_STATES.phone
+            authState: AUTH_STATES.phone,
+            phone: ""
         }
     }
 
@@ -33,21 +36,72 @@ export default class App extends React.Component {
         this.setState({fontsAreLoaded: true});
     }
 
+    authenticatePhone = async (phone) => {
+        try {
+            let response = await fetch(endpoint + 'auth/phone', {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({phone})
+            });
+
+            if (response.status === 200) {
+                let responseJson = await response.json();
+                this.setState({
+                    authState: AUTH_STATES.code,
+                    phone: responseJson.phone
+                });
+                return true;
+            } else {
+                return false;
+            }
+        } catch(error) {
+            console.error(error);
+            return false;
+        }
+    };
+
+    authenticateCode = async(code) => {
+        try {
+            let response = await fetch(endpoint + 'auth/code', {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({phone: this.state.phone, code})
+            });
+
+            if (response.status === 200) {
+                this.setState({
+                    authState: AUTH_STATES.auth,
+                    phone: ""
+                });
+                return true;
+            } else {
+                return false;
+            }
+        } catch(error) {
+            console.error(error);
+            return false;
+        }
+    };
+
     authenticate = async(input) => {
         console.log("auth", input);
         console.log(this.state.authState);
         switch (this.state.authState) {
             case AUTH_STATES.phone:
-                //todo auth with server
-                this.setState({authState: AUTH_STATES.code});
-                console.log("state -> code")
+                return this.authenticatePhone(input);
+                console.log("state -> code");
                 break;
             case AUTH_STATES.code:
-                //todo auth with server
-                this.setState({authState: AUTH_STATES.auth});
+                return this.authenticateCode(input);
                 break;
         }
-        return true;
+        return false;
     };
 
     render() {
