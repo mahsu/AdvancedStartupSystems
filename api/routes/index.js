@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const Code = require('../models/code');
 
 const config = require('../config');
 
@@ -11,12 +12,22 @@ router.get('/', function (req, res, next) {
 });
 
 router.post("/auth/phone", function (req, res, next) {
+    if (!req.body.phone) {
+        return res.sendStatus(500);
+    }
     twilio.lookups.v1
         .phoneNumbers(req.body.phone)
         .fetch()
         .then((number) => {
-            console.log(number.phoneNumber);
-            return res.sendStatus(200);
+            var phone = number.phoneNumber;
+            console.log(phone);
+            var code = Code.add(phone,(code) => {
+                if (code) {
+                    console.log(code);
+                    return res.status(200).send(phone);
+                }
+                return res.sendStatus(500);
+            });
         })
         .catch((error) => {
             console.log(error);
@@ -25,7 +36,13 @@ router.post("/auth/phone", function (req, res, next) {
 });
 
 router.post("/auth/code", function (req, res, next) {
-
+    if (!req.body.phone || !req.body.code) {
+        return res.sendStatus(500);
+    }
+    if (Code.verify(req.body.phone, req.body.code)) {
+        return res.sendStatus(200);
+    }
+    return res.sendStatus(500);
 });
 
 
