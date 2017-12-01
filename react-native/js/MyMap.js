@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet,  View } from 'react-native';
 
 import MapView from 'react-native-maps';
 
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
 
 export default class MyMap extends React.Component {
   render() {
+      console.log('shshshshshshshshooowwwing');
     // TODO: Get this from the Device GPS
     let [lat, lng] = [40.755644, -73.956097];
 
