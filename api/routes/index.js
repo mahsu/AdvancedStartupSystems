@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
+
 const Code = require('../models/code');
+const Job = require('../models/job');
+const User = require('../models/user');
 
 const config = require('../config');
 
@@ -51,6 +54,19 @@ router.get("/jobs", function (req, res, next) {
 });
 
 router.put('/job/new', function (req, res, next) {
+    new Job({
+        details: {
+            numRooms: req.body.numRooms,
+            startTime: req.body.startTime,
+            endTime: req.body.endTime,
+            maxPrice: req.body.maxPrice,
+            loc: [req.body.lon,req.body.lat],//[lon,lat]
+            description: req.body.description //todo validation
+        },
+        requester: req.body.phone, //todo actual id
+        mover: null,//todo
+        jobType: {type: String}
+    });
     //create job in db
     //match with mover
     //return details of job + mover
@@ -58,5 +74,6 @@ router.put('/job/new', function (req, res, next) {
 
 router.put('/job/{jobid}', function (req, res, next) {
 
-})
+});
+
 module.exports = router;
