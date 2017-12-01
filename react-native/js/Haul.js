@@ -12,6 +12,21 @@ export default class Haul extends React.Component {
     // };
     constructor(props) {
         super(props);
+
+
+        this.state={
+            room: '',
+            textLength: 0,
+            startTime: 0,
+            endTime: 0,
+            maxPrice: 0,
+            jobDescription:""
+        };
+    }
+    onChangeText(text){
+        this.setState({
+            textLength: text.length
+        });
     }
 
     render() {
@@ -66,7 +81,9 @@ export default class Haul extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} onChangeText={this.onChangeText.bind(this)}
+                                   underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                        <Text style={{textAlign:"right"}}>{this.state.textLength}/120</Text>
                     </View>
 
                 </View>
