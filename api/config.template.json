@@ -1,0 +1,12 @@
+{
+  "general": {
+    "cookie_secret": ""
+  },
+  "twilio": {
+    "test_account": "",
+    "test_token": "",
+    "prod_account": "",
+    "prod_token": "",
+    "from_phone": ""
+  }
+}
