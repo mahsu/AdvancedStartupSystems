@@ -16,23 +16,26 @@ codeSchema.statics.removeAll = function () {
     });
 };
 
-codeSchema.statics.verify = function (phone, code) {
+codeSchema.statics.verify = function (phone, code, cb) {
     let _this = this;
     this.findOne({phone}, function (err, res) {
         if (err) {
             console.error(err);
-            return false;
+            return cb(false);
         }
+        console.log(res.code, code);
         if (res !== null && res.code === code) {
             _this.remove({phone}, function (err, res) {
                 if (err) {
                     console.error(err);
-                    return false;
+                    return cb(false);
                 }
-                return true;
+                console.log("returning true");
+                return cb(true);
             })
+        } else {
+            return cb(false);
         }
-        return false;
     });
 };
 
@@ -52,7 +55,7 @@ codeSchema.statics.add = function (phone, cb) {
         if (res) {
             res.code = code;
         } else {
-            newCode = new _this({phone, res});
+            newCode = new _this({phone, code});
         }
         newCode.save((err, res) => {
             if (err) {

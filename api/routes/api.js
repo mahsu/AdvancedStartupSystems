@@ -24,10 +24,10 @@ router.post("/auth/phone", function (req, res, next) {
         .then((number) => {
             var phone = number.phoneNumber;
             console.log(phone);
-            var code = Code.add(phone,(code) => {
+            Code.add(phone, (code) => {
                 if (code) {
                     console.log(code);
-                    return res.status(200).send(phone);
+                    return res.status(200).send(JSON.stringify({phone}));
                 }
                 return res.sendStatus(500);
             });
@@ -40,12 +40,17 @@ router.post("/auth/phone", function (req, res, next) {
 
 router.post("/auth/code", function (req, res, next) {
     if (!req.body.phone || !req.body.code) {
+        console.log("Missing parameters");
         return res.sendStatus(500);
     }
-    if (Code.verify(req.body.phone, req.body.code)) {
-        return res.sendStatus(200);
-    }
-    return res.sendStatus(500);
+    console.log(req.body);
+    Code.verify(req.body.phone, req.body.code, (valid) => {
+        let status = 200;
+        if (!valid) {
+            status = 500;
+        }
+        return res.sendStatus(status);
+    });
 });
 
 
@@ -60,7 +65,7 @@ router.put('/job/new', function (req, res, next) {
             startTime: req.body.startTime,
             endTime: req.body.endTime,
             maxPrice: req.body.maxPrice,
-            loc: [req.body.lon,req.body.lat],//[lon,lat]
+            loc: [req.body.lon, req.body.lat],//[lon,lat]
             description: req.body.description //todo validation
         },
         requester: req.body.phone, //todo actual id
