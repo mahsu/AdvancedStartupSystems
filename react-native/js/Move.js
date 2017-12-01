@@ -2,22 +2,19 @@
  * Created by daiyuhui on 21/11/2017.
  */
 import React from 'react';
-import { View, StyleSheet,Text, TextInput, TouchableHighlight,Dimensions } from 'react-native';
+import {StyleSheet,Dimensions } from 'react-native';
 import MyMap from './MyMap';
-
+import { Container, Button,Content, Icon, Text, Form,Item, Input } from 'native-base';
 
 export default class Move extends React.Component {
-    // static navigationOptions = {
-    //     tabBarIcon: ({ tintColor }) => (
-    //         <Image
-    //             source={require('../resource/home.png')}
-    //             style={[styles.icon, {tintColor: tintColor}]}/>
-    //     ),
-    //
-    // };
+    static navigationOptions = {
+        header: null,
+    }
     constructor(props) {
         super(props);
         this.state={
+            modalVisible: false,
+            activity: false,
             room: '',
             textLength: 0,
             startTime: 0,
@@ -32,69 +29,103 @@ export default class Move extends React.Component {
         });
     }
 
+    // onRequest(){
+    //     var {navigate} = this.props.navigation;
+    //     this.setState({modalVisible:true});
+    //
+    //     () => navigate('ACCEPT');
+    // };
+
     render() {
         var {navigate} = this.props.navigation;
         let w = Dimensions.get('window').width;
 
         return (
-            <View style={styles.container}>
-                <View style={styles.map}>
+        <Container>
+            <Content>
+                <Content style={styles.map}>
                     <MyMap/>
-                </View>
-                <View style={[{marginTop: 25},styles.row]}>
-                    <View>
+                </Content>
+                <Content style={[{marginTop: 25},styles.row]}>
+                    <Content>
                         <Text style={[styles.left, {width: w/2}]}>Number of Rooms to Move:</Text>
-                    </View>
-                    <View>
-                        <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"4"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
-                    </View>
+                    </Content>
+                    <Content>
+                        <Form>
+                            <Item>
+                                <Input keyboardType={'numeric'} style={styles.codeInput} placeholder="4"/>
+                            </Item>
+                        </Form>
 
-                </View>
-                <View style={styles.row}>
-                    <View>
+                    </Content>
+
+                </Content>
+                <Content style={styles.row}>
+                    <Content>
                         <Text style={[styles.left, {width: w/2}]}>Job Start Time:</Text>
-                    </View>
-                    <View>
-                        <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"12:30 PM"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
-                    </View>
+                    </Content>
+                    <Content>
+                        <Form>
+                            <Item>
+                                <Input style={styles.codeInput} placeholder="12:00 PM" />
+                            </Item>
+                        </Form>
 
-                </View>
-                <View style={styles.row}>
-                    <View>
+                    </Content>
+
+                </Content>
+                <Content style={styles.row}>
+                    <Content>
                         <Text style={[styles.left, {width: w/2}]}>Finish By:</Text>
-                    </View>
-                    <View>
-                        <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"14:00 PM"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
-                    </View>
-                </View>
-                <View style={styles.row}>
-                    <View>
-                        <Text style={[styles.left, {fontSize: 30, width: w/2}]}>Max Price:</Text>
-                    </View>
-                    <View>
-                        <TextInput keyboardType={'numeric'} style={styles.price} placeholder={"$450"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
-                    </View>
-                </View>
-                <View style={[styles.col]}>
-                    <View>
-                        <Text style={[styles.left, {width: w}]}>Describe Your Job:</Text>
-                    </View>
-                    <View>
-                        <TextInput keyboardType={'numeric'} style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
-                                   placeholderTextColor={'#bac3e0'} maxLength={120} onChangeText={this.onChangeText.bind(this)}
-                                   underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
-                        <Text style={{textAlign:"right"}}>{this.state.textLength}/120</Text>
-                    </View>
+                    </Content>
+                    <Content>
+                        <Form>
+                            <Item>
+                                <Input style={styles.codeInput} placeholder="14:00 PM" />
+                            </Item>
+                        </Form>
 
-                </View>
-                <TouchableHighlight onPress={() => navigate('ACCEPT')} underlayColor={'white'}>
-                    <Text style={styles.back}>SEND</Text>
-                </TouchableHighlight>
-            </View>
+                    </Content>
+                </Content>
+
+                <Content style={styles.row}>
+                    <Content>
+                        <Text style={[styles.left, {fontSize: 30, width: w/2}]}>Max Price:</Text>
+                    </Content>
+                    <Content>
+                        <Form>
+                            <Item>
+                                <Input style={styles.price} placeholder="$450"/>
+                            </Item>
+                        </Form>
+
+                    </Content>
+                </Content>
+                <Content style={[styles.col]}>
+                    <Content>
+                        <Text style={[styles.left, {width: w}]}>Describe Your Job:</Text>
+                    </Content>
+                    <Content>
+                        <Form>
+                            <Item>
+                                <Input style={[styles.codeInput,{width: w}]} placeholder="eg: moving sofa" maxLength={120}
+                                       onChangeText={this.onChangeText.bind(this)}/>
+                            </Item>
+                        </Form>
+                        <Text style={{textAlign:"right", marginRight:20}}>{this.state.textLength}/120</Text>
+
+                    </Content>
+
+                </Content>
+
+
+                <Button iconLeft onPress={() => navigate('ACCEPT')}>
+                    <Icon name='home' />
+                    <Text>SEND</Text>
+                </Button>
+
+            </Content>
+        </Container>
         );
     };
 }

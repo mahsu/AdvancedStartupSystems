@@ -3,13 +3,9 @@ import { View, StyleSheet,Text, TextInput, TouchableHighlight,Dimensions} from '
 import MyMap from './MyMap';
 
 export default class Haul extends React.Component {
-    // static navigationOptions = {
-    //     tabBarIcon: () => (
-    //         <Image source={require('../resource/home.png')}
-    //             style={ {width: 26, height: 26}}/>
-    //     ),
-    //
-    // };
+    static navigationOptions = {
+        header: null,
+    }
     constructor(props) {
         super(props);
 
@@ -83,11 +79,11 @@ export default class Haul extends React.Component {
                         <TextInput keyboardType={'numeric'} style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
                                    placeholderTextColor={'#bac3e0'} onChangeText={this.onChangeText.bind(this)}
                                    underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
-                        <Text style={{textAlign:"right"}}>{this.state.textLength}/120</Text>
+                        <Text style={{textAlign:"right", marginRight:20}}>{this.state.textLength}/120</Text>
                     </View>
 
                 </View>
-                <TouchableHighlight onPress={() => navigate('ACCEPT')} underlayColor={'white'}>
+                <TouchableHighlight onPress={() => navigate('ACCEPT')} underlayColor={'transparent'}>
                     <Text style={styles.back}>SEND</Text>
                 </TouchableHighlight>
             </View>

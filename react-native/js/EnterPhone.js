@@ -2,6 +2,9 @@ import React from 'react';
 import {StyleSheet, Text, TextInput, View, KeyboardAvoidingView, Image, ActivityIndicator, TouchableHighlight} from 'react-native';
 
 export default class EnterPhone extends React.Component {
+    static navigationOptions = {
+        header: null,
+    }
 
     constructor(props) {
         super(props);

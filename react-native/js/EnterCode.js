@@ -3,6 +3,9 @@ import { View, Text,StyleSheet,KeyboardAvoidingView,TextInput, TouchableHighligh
 
 
 export default class EnterCode extends React.Component {
+    static navigationOptions = {
+        header: null,
+    }
 
     constructor(props) {
         super(props);
@@ -11,13 +14,7 @@ export default class EnterCode extends React.Component {
         }
     }
 
-    onCode = (inputText) => {
-        var {navigate} = this.props.navigation;
 
-        () => navigate('ENTER_JOB');
-
-        console.log(this.props);
-    };
 
     render() {
         var {navigate} = this.props.navigation;

@@ -3,6 +3,9 @@ import { View,Image, Text,StyleSheet,KeyboardAvoidingView,TextInput, Dimensions,
 
 
 export default class Accept extends React.Component {
+    static navigationOptions = {
+        header: null,
+    }
 
     constructor(props) {
         super(props);
@@ -20,7 +23,7 @@ export default class Accept extends React.Component {
                 </View>
 
                 <Image source={require('../resource/profile.jpg')}
-                       style={{width:Dimensions.get('window').width, height: 200 }}></Image>
+                       style={{width:Dimensions.get('window').width, height: 250 }}></Image>
                 <Text style={{margin: 30}}>Aleo has accepted your job. Please make sure to coordinate with him.</Text>
 
                 <View style={styles.row}>
