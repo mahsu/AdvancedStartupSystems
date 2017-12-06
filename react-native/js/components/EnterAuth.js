@@ -25,7 +25,7 @@ export default class EnterAuth extends React.Component {
         if (typeof this.props.onSubmit === 'function') {
             if (await this.props.onSubmit(this.state.text)) {
                 console.log("valid authentication");
-                this.setState({text:""});
+                //this.setState({text:""});
             } else {
                 console.log("Invalid authentication");
             }

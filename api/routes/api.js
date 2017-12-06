@@ -58,6 +58,28 @@ router.get("/jobs", function (req, res, next) {
 
 });
 
+router.put('/user/new', function (req, res, next) {
+    let user = new User({
+        name: {
+            first: req.body.first,
+            last: req.body.last
+        },
+        email: req.body.email,
+        image: req.body.image,
+        phone: req.body.phone,
+        type: req.body.type,
+        busy: false
+    });
+
+    user.save((err) => {
+        if (err) {
+            return res.sendStatus(500)
+        } else {
+            return res.sendStatus(200)
+        }
+    });
+});
+
 router.put('/job/new', function (req, res, next) {
     new Job({
         details: {
@@ -66,7 +88,7 @@ router.put('/job/new', function (req, res, next) {
             endTime: req.body.endTime,
             maxPrice: req.body.maxPrice,
             loc: [req.body.lon, req.body.lat],//[lon,lat]
-            description: req.body.description //todo validation
+            description: req.body.description
         },
         requester: req.body.phone, //todo actual id
         mover: null,//todo
