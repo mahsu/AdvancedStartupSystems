@@ -114,7 +114,7 @@ export default class App extends React.Component {
                     <Root>
                         {this.state.authState === AUTH_STATES.phone
                             ? <EnterAuth onSubmit={this.authenticate} textBoxLabel="Enter Phone" buttonLabel="SEND CODE"/>
-                            : <EnterAuth onSubmit={this.authenticate} textBoxLabel="Enter Code" buttonLabel="SEND"/>}
+                            : <EnterAuth onSubmit={this.authenticate} textBoxLabel="Enter Code" buttonLabel="VERIFY"/>}
                     </Root>
                 </Provider>
             );

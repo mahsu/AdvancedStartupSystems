@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet,Text, TextInput, TouchableHighlight,Dimensions} from 'react-native';
+import { View, StyleSheet,Text, TextInput, TouchableHighlight,Dimensions, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import MyMap from './MyMap';
 import {endpoint} from "../src/util";
 import {connect} from "react-redux";
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 const mapStateToProps = function(state){
     return {
@@ -22,8 +23,8 @@ class Move extends React.Component {
         this.state={
             details: {
                 numRooms: '',
-                startTime: 0,
-                endTime: 0,
+                startTime: null,
+                endTime: null,
                 maxPrice: 0,
                 description:"",
             },
@@ -66,8 +67,35 @@ class Move extends React.Component {
         }
     };
 
+    _showStartTimePicker = () => {
+            Keyboard.dismiss();
+            this.setState({isStartTimePickerVisible: true});
+    };
+
+    _showEndTimePicker = () => {
+        Keyboard.dismiss();
+        this.setState({ isEndTimePickerVisible: true });
+    };
+
+    _hideStartTimePicker = () => this.setState({ isStartTimePickerVisible: false });
+
+    _hideEndTimePicker = () => this.setState({ isEndTimePickerVisible: false});
+
+    _handleStartTimePicked = (date) => {
+        console.log('A date has been picked: ', date);
+        this.setState({details: {...this.state.details, startTime: date}});
+        this._hideStartTimePicker();
+    };
+
+    _handleEndTimePicked = (date) => {
+        console.log(date);
+        this.setState({details: {...this.state.details, endTime: date}});
+        this._hideEndTimePicker();
+    };
+
     render() {
         var {navigate} = this.props.navigation;
+        let {startTime, endTime} = this.state.details;
         let w = Dimensions.get('window').width;
         return (
             <View style={styles.container}>
@@ -90,7 +118,16 @@ class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"12:30 PM"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                   onFocus={this._showStartTimePicker}
+                                   value={startTime ? startTime.getHours() + ":" + startTime.getMinutes() : ''}
+                                    />
+                        <DateTimePicker
+                            isVisible={this.state.isStartTimePickerVisible}
+                            onConfirm={this._handleStartTimePicked}
+                            onCancel={this._hideStartTimePicker}
+                            mode={'time'}
+                        />
                     </View>
 
                 </View>
@@ -100,7 +137,16 @@ class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"14:00 PM"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                    onFocus={this._showEndTimePicker}
+                                   value={endTime ? endTime.getHours() + ":" + endTime.getMinutes() : ''}
+                                    />
+                        <DateTimePicker
+                            isVisible={this.state.isEndTimePickerVisible}
+                            onConfirm={this._handleEndTimePicked}
+                            onCancel={this._hideEndTimePicker}
+                            mode={'time'}
+                        />
                     </View>
                 </View>
                 <View style={styles.row}>
@@ -128,6 +174,7 @@ class Move extends React.Component {
                     <Text style={styles.back}>SEND</Text>
                 </TouchableHighlight>
             </View>
+
         );
     };
 }
