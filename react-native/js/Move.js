@@ -4,6 +4,7 @@ import MyMap from './MyMap';
 import {endpoint} from "../src/util";
 import {connect} from "react-redux";
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import moment from 'moment';
 
 const mapStateToProps = function(state){
     return {
@@ -47,7 +48,7 @@ class Move extends React.Component {
 
         try {
             let response = await fetch(endpoint + 'job/new', {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -83,14 +84,12 @@ class Move extends React.Component {
     _hideEndTimePicker = () => this.setState({ isEndTimePickerVisible: false});
 
     _handleStartTimePicked = (date) => {
-        console.log('A date has been picked: ', date);
-        this.setState({details: {...this.state.details, startTime: date}});
+        this.setState({details: {...this.state.details, startTime: moment(date)}});
         this._hideStartTimePicker();
     };
 
     _handleEndTimePicked = (date) => {
-        console.log(date);
-        this.setState({details: {...this.state.details, endTime: date}});
+        this.setState({details: {...this.state.details, endTime: moment(date)}});
         this._hideEndTimePicker();
     };
 
@@ -122,7 +121,7 @@ class Move extends React.Component {
                         <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"12:30 PM"}
                                    placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
                                    onFocus={this._showStartTimePicker}
-                                   value={startTime ? startTime.getHours() + ":" + startTime.getMinutes() : ''}
+                                   value={startTime ? startTime.format('h:mm A') : ''}
                                     />
                         <DateTimePicker
                             isVisible={this.state.isStartTimePickerVisible}
@@ -141,7 +140,7 @@ class Move extends React.Component {
                         <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"14:00 PM"}
                                    placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
                                     onFocus={this._showEndTimePicker}
-                                   value={endTime ? endTime.getHours() + ":" + endTime.getMinutes() : ''}
+                                   value={endTime ? endTime.format('h:mm A') : ''}
                                     />
                         <DateTimePicker
                             isVisible={this.state.isEndTimePickerVisible}

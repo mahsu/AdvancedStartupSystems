@@ -81,19 +81,24 @@ router.put('/user/new', function (req, res, next) {
 });
 
 router.put('/job/new', function (req, res, next) {
-    new Job({
+    let job = new Job({
         details: {
-            numRooms: req.body.numRooms,
-            startTime: req.body.startTime,
-            endTime: req.body.endTime,
-            maxPrice: req.body.maxPrice,
-            loc: [req.body.lon, req.body.lat],//[lon,lat]
+            numRooms: parseInt(req.body.numRooms),
+            startTime: new Date(req.body.startTime),
+            endTime: new Date(req.body.endTime),
+            maxPrice: parseInt(req.body.maxPrice),
+            loc: {
+                type: "Point",
+                coordinates: [parseFloat(req.body.lon), parseFloat(req.body.lat)], //[lon,lat]
+            },
             description: req.body.description
         },
         requester: req.body.phone, //todo actual id
         mover: null,//todo
         jobType: {type: String}
     });
+    console.log(job);
+    return res.status(200).json({status: true});
     //create job in db
     //match with mover
     //return details of job + mover
