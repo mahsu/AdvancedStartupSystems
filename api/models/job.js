@@ -8,7 +8,7 @@ var jobSchema = new mongoose.Schema({
         endTime: {type: Date},
         maxPrice: {type: Number},
         loc: {
-            type: {type: String},
+            type: {type: String, default: "Point"},
             coordinates: [Number] // convention is lon, lat
         },
         description: {type: String} //todo validation

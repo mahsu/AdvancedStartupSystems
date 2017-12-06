@@ -25,7 +25,9 @@ export default class EnterAuth extends React.Component {
         if (typeof this.props.onSubmit === 'function') {
             if (await this.props.onSubmit(this.state.text)) {
                 console.log("valid authentication");
-                //this.setState({text:""});
+                if (this.refs.ref) {
+                    this.setState({text:""});
+                }
             } else {
                 console.log("Invalid authentication");
             }
@@ -35,7 +37,7 @@ export default class EnterAuth extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView behavior={'padding'}
+            <KeyboardAvoidingView ref="ref" behavior={'padding'}
                                   style={[styles.centeredView, {backgroundColor: 'white', padding: 40}]}>
 
                 <TextInput keyboardType={'numeric'} style={styles.phoneNumberInput} placeholder={this.props.textBoxLabel}

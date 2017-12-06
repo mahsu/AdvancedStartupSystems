@@ -1,18 +1,21 @@
 import React from 'react';
 import {StyleSheet, Text, TextInput, View, KeyboardAvoidingView, Image, ActivityIndicator} from 'react-native';
 import {Root} from 'native-base';
-
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
 import EnterAuth from './js/components/EnterAuth';
 import JobScreen from './js/EnterJob';
 import AcceptScreen from './js/Acceptance';
-import { StackNavigator } from 'react-navigation';
-
+import {StackNavigator} from 'react-navigation';
+import reduxApp from './js/redux/reducers';
 import {endpoint} from "./src/util";
 
 const AppNavigator = StackNavigator({
     ENTER_JOB: {screen: JobScreen},
     ACCEPT: {screen: AcceptScreen},
 });
+
+let store = createStore(reduxApp);
 
 const AUTH_STATES = Object.freeze({phone: 1, code: 2, auth: 3});
 
@@ -22,7 +25,7 @@ export default class App extends React.Component {
 
         this.state = {
             fontsAreLoaded: false,
-            authState: AUTH_STATES.phone,
+            authState: AUTH_STATES.auth,
             phone: ""
         }
     }
@@ -57,13 +60,13 @@ export default class App extends React.Component {
             } else {
                 return false;
             }
-        } catch(error) {
+        } catch (error) {
             console.error(error);
             return false;
         }
     };
 
-    authenticateCode = async(code) => {
+    authenticateCode = async (code) => {
         try {
             let response = await fetch(endpoint + 'auth/code', {
                 method: "POST",
@@ -83,23 +86,20 @@ export default class App extends React.Component {
             } else {
                 return false;
             }
-        } catch(error) {
+        } catch (error) {
             console.error(error);
             return false;
         }
     };
 
-    authenticate = async(input) => {
+    authenticate = async (input) => {
         console.log("auth", input);
         console.log(this.state.authState);
         switch (this.state.authState) {
             case AUTH_STATES.phone:
                 return this.authenticatePhone(input);
-                console.log("state -> code");
-                break;
             case AUTH_STATES.code:
                 return this.authenticateCode(input);
-                break;
         }
         return false;
     };
@@ -110,91 +110,23 @@ export default class App extends React.Component {
         }
         if (this.state.authState !== AUTH_STATES.auth) {
             return (
-                //<Provider store={store}>
+                <Provider store={store}>
                     <Root>
                         {this.state.authState === AUTH_STATES.phone
-                        ? <EnterAuth onSubmit={this.authenticate} textBoxLabel="Enter Phone" buttonLabel="SEND CODE"/>
-                        : <EnterAuth onSubmit={this.authenticate} textBoxLabel="Enter Code" buttonLabel="SEND"/>}
+                            ? <EnterAuth onSubmit={this.authenticate} textBoxLabel="Enter Phone" buttonLabel="SEND CODE"/>
+                            : <EnterAuth onSubmit={this.authenticate} textBoxLabel="Enter Code" buttonLabel="SEND"/>}
                     </Root>
-                //</Provider>
+                </Provider>
             );
         }
 
         return (
-           // <Provider store={store}>
+            <Provider store={store}>
                 <Root>
                     <AppNavigator/>
                 </Root>
-            //</Provider>
+            </Provider>
         )
 
     }
 }
-
-// Possible Screen States (JS doesn't have Enum's)
-// const ENTER_PHONE = 'ep';
-// const ENTER_CODE = 'ec';
-// const ENTER_JOB = 'ej';
-// const SEARCHING = 'sr';
-
-// This is the main application class.
-// 'export' means it can be accessed via an 'import' in another file
-// 'export default' is the idiomatic way to package a component in RN
-// export default class App extends React.Component {
-//     // This is how you implement a class constructor in ES6
-//     constructor(props) {
-//         super(props);  // this is idiomatic boilerplate for Component Constructor
-//
-//         // Application state currently only consists of
-//         // 1. Which SCREEN are we looking at (see the SWITCH stmt in render())
-//         // 2. If some loading or similar ACTIVITY is happening
-//         //
-//         // We may expect to extend the state significantly as the app grows,
-//         // Although much state should be encapsulated in individual components
-//         this.state = {
-//             fontsAreLoaded: false,
-//             activity: false,
-//             screen: ENTER_PHONE
-//         }
-//     }
-//
-//     async componentWillMount() {
-//         await Expo.Font.loadAsync({
-//             'Ionicons': require('native-base/Fonts/Ionicons.ttf'),
-//             'Roboto': require('native-base/Fonts/Roboto.ttf'),
-//             'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-//         });
-//         this.setState({fontsAreLoaded: true});
-//     }
-//
-//
-// // This function is the main render function for the whole application.
-// // We really just SWITCH between different views.
-// // Probably all the views should really be defined in individual components
-// // where each component represents a page of the application
-//     render() {
-//         // Copying state into a CONST really makes it clear that it is not possible
-//         // to change state directly (you must use setState() at the appropriate time and place!)
-//         if (!this.state.fontsAreLoaded) {
-//             return <View><Text>Loading</Text></View>
-//         }
-//         const {screen} = this.state;
-//         switch (screen) {
-//             case ENTER_JOB:
-//                 return enterJob();
-//             case ENTER_CODE:
-//                 return enterCode();
-//             case ENTER_PHONE:
-//                 // return (
-//                 //         <EnterPhone></EnterPhone>
-//
-//                 // );
-//                 return (
-//                     <StyleProvider style={getTheme('material')}>
-//                         <EnterPhone></EnterPhone>
-//                     </StyleProvider>
-//                 );
-//         }
-//     }
-// }
-

@@ -1,29 +1,70 @@
 import React from 'react';
 import { View, StyleSheet,Text, TextInput, TouchableHighlight,Dimensions} from 'react-native';
 import MyMap from './MyMap';
+import {endpoint} from "../src/util";
+import {connect} from "react-redux";
 
-export default class Move extends React.Component {
+const mapStateToProps = function(state){
+    return {
+        currentLoc: state.loc,
+    }
+};
+
+class Move extends React.Component {
     static navigationOptions = {
         header: null,
-    }
+    };
+
+
     constructor(props) {
         super(props);
 
-
         this.state={
-            room: '',
+            details: {
+                numRooms: '',
+                startTime: 0,
+                endTime: 0,
+                maxPrice: 0,
+                description:"",
+            },
             textLength: 0,
-            startTime: 0,
-            endTime: 0,
-            maxPrice: 0,
-            jobDescription:""
         };
     }
+
     onChangeText(text){
         this.setState({
             textLength: text.length
         });
     }
+
+    onSubmit = async () => {
+        var {navigate} = this.props.navigation;
+        let [lon, lat] = this.props.currentLoc;
+        let body = Object.assign(this.state.details, {lon, lat});
+        console.log(body);
+
+        try {
+            let response = await fetch(endpoint + 'job/new', {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (response.status === 200) {
+                var json = await response.body;
+                navigate('ACCEPT');
+                return true;
+            } else {
+                return false;
+            }
+        } catch(error) {
+            console.error(error);
+            return false;
+        }
+    };
 
     render() {
         var {navigate} = this.props.navigation;
@@ -83,7 +124,7 @@ export default class Move extends React.Component {
                     </View>
 
                 </View>
-                <TouchableHighlight onPress={() => navigate('ACCEPT')} underlayColor={'transparent'}>
+                <TouchableHighlight onPress={() => this.onSubmit()} underlayColor={'transparent'}>
                     <Text style={styles.back}>SEND</Text>
                 </TouchableHighlight>
             </View>
@@ -148,3 +189,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     }
 });
+
+export default connect(
+    mapStateToProps
+)(Move)
