@@ -32,11 +32,12 @@ class Move extends React.Component {
         };
     }
 
-    onChangeText(text){
+    onChangeDescription = (text) => {
         this.setState({
-            textLength: text.length
+            textLength: text.length,
+            details: {...this.state.details, description: text}
         });
-    }
+    };
 
     onSubmit = async () => {
         var {navigate} = this.props.navigation;
@@ -108,7 +109,8 @@ class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"4"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                    onChangeText={(text) => this.setState({details: {...this.state.details, numRooms: text}})}/>
                     </View>
 
                 </View>
@@ -155,7 +157,8 @@ class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={styles.price} placeholder={"$450"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                    onChangeText={(text) => {this.setState({details: {...this.state.details, maxPrice: text}})}}/>
                     </View>
                 </View>
                 <View style={[styles.col]}>
@@ -164,8 +167,10 @@ class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
-                                   placeholderTextColor={'#bac3e0'} onChangeText={this.onChangeText.bind(this)}
-                                   underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} onChangeText={(text) => this.onChangeDescription(text)}
+                                   underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                   value={this.state.details.description}
+                                    maxLength={120}/>
                         <Text style={{textAlign:"right", marginRight:20}}>{this.state.textLength}/120</Text>
                     </View>
 
