@@ -92,7 +92,6 @@ export default class DriverHome extends React.Component {
     }
 
     render() {
-        var {navigate} = this.props.navigation;
 
         return (
 
