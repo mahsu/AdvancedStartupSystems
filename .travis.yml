@@ -4,6 +4,7 @@ node_js:
 services: mongodb
 before_script:
     - npm install
+    - cd api && npm install
 script:
     - npm start &
     - sleep 3000
