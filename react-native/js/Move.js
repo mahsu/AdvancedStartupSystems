@@ -9,6 +9,7 @@ import moment from 'moment';
 const mapStateToProps = function(state){
     return {
         currentLoc: state.loc,
+        phone: state.phone
     }
 };
 
@@ -45,6 +46,7 @@ class Move extends React.Component {
         var {navigate} = this.props.navigation;
         let [lon, lat] = this.props.currentLoc;
         let body = Object.assign(this.state.details, {lon, lat});
+        body.phone = this.props.phone;
         console.log(body);
 
         try {

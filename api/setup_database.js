@@ -163,7 +163,7 @@ const jobs = [
             "description": "Moose"
         },
         "requester": "+16099073676",
-        "mover": "+19172708287",
+        "mover": null,
         "jobType": "Move"
     },
     {

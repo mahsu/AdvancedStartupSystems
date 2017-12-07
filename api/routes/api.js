@@ -64,15 +64,16 @@ router.post("/auth/code", function (req, res, next) {
 
 
 router.get("/jobs/available", function (req, res, next) {
-    Job.find({mover: null}, function(err, user) {
+    Job.find({mover: null}, function (err, user) {
         if (err) {
-            console.log(err)
-            return res.sendStatus(500)
+            console.log(err);
+            return res.sendStatus(500);
         } else {
             return res.json(user)
         }
     });
 });
+
 
 router.put('/user/new', function (req, res, next) {
     twilio.lookups.v1
@@ -107,27 +108,43 @@ router.put('/user/new', function (req, res, next) {
 });
 
 router.put('/job/new', function (req, res, next) {
-    let job = new Job({
-        details: {
-            numRooms: parseInt(req.body.numRooms),
-            startTime: new Date(req.body.startTime),
-            endTime: new Date(req.body.endTime),
-            maxPrice: parseInt(req.body.maxPrice),
-            loc: {
-                type: "Point",
-                coordinates: [parseFloat(req.body.lon), parseFloat(req.body.lat)], //[lon,lat]
+
+    User.findOne({type: "driver", busy: false}, (err, mover) => {
+        if (err) {
+            console.log(err);
+        }
+        let job = new Job({
+            details: {
+                numRooms: parseInt(req.body.numRooms),
+                startTime: new Date(req.body.startTime),
+                endTime: new Date(req.body.endTime),
+                maxPrice: parseInt(req.body.maxPrice),
+                loc: {
+                    type: "Point",
+                    coordinates: [parseFloat(req.body.lon), parseFloat(req.body.lat)], //[lon,lat]
+                },
+                description: req.body.description
             },
-            description: req.body.description
-        },
-        requester: req.body.phone, //todo actual id
-        mover: null,//todo
-        jobType: {type: String}
+            requester: req.body.phone,
+            mover: mover.phone,
+            jobType: req.body.type
+        });
+        console.log(job);
+        mover.busy = true;
+        mover.save();
+        job.save((err) => {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(500)
+            } else {
+                return res.status(200).json({
+                    job,
+                    mover
+                });
+            }
+        });
+
     });
-    console.log(job);
-    return res.status(200).json({status: true});
-    //create job in db
-    //match with mover
-    //return details of job + mover
 });
 
 router.put('/job/{jobid}', function (req, res, next) {

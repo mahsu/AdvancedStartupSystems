@@ -10,6 +10,7 @@ import {StackNavigator} from 'react-navigation';
 import reduxApp from './js/redux/reducers';
 import {endpoint} from "./src/util";
 import DriverScreen from "./js/DriverHome";
+import {setPhone} from "./js/redux/actions";
 
 const AppNavigator = StackNavigator({
     ENTER_JOB: {screen: JobScreen},
@@ -58,6 +59,7 @@ export default class App extends React.Component {
                     phone: responseJson.phone,
                     type: responseJson.type,
                 });
+                store.dispatch(setPhone(responseJson.phone));
                 return true;
             } else {
                 return false;
