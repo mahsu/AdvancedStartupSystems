@@ -23,14 +23,17 @@ router.post("/auth/phone", function (req, res, next) {
         .fetch()
         .then((number) => {
             var phone = number.phoneNumber;
-            User.findOne({phone}, (err, res) => {
+            User.findOne({phone}, (err, user) => {
                 if (res == null) {
                     return res.sendStatus(500);
                 }
                 Code.add(phone, (code) => {
                     if (code) {
                         console.log(code);
-                        return res.status(200).json({phone});
+                        return res.status(200).json({
+                            phone,
+                            type: user.type
+                        });
                     }
                     return res.sendStatus(500);
                 });
