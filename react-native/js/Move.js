@@ -59,8 +59,10 @@ class Move extends React.Component {
             });
 
             if (response.status === 200) {
+
                 var json = await response.body;
                 navigate('ACCEPT',json);
+
                 return true;
             } else {
                 return false;

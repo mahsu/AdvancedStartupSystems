@@ -27,7 +27,7 @@ export default class App extends React.Component {
 
         this.state = {
             fontsAreLoaded: false,
-            authState: AUTH_STATES.auth,
+            authState: AUTH_STATES.phone,
             phone: ""
         }
     }

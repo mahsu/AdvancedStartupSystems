@@ -51,4 +51,7 @@ app.use(function(err, req, res, next) {
 
 require("./setup_database")
 
+config = require("./config.js");
+const twilio = require('twilio')(config.twilio.prod_account, config.twilio.prod_token);
+
 module.exports = app;
