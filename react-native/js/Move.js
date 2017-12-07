@@ -167,7 +167,7 @@ class Move extends React.Component {
                     </View>
                     <View>
 
-                        <TextInput keyboardType={'numeric'} style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
+                        <TextInput style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
                                    placeholderTextColor={'#bac3e0'} onChangeText={(text) => this.onChangeDescription(text)}
                                    underlineColorAndroid={'rgba(186,195,224,0.5)'}
                                    value={this.state.details.description}
