@@ -86,12 +86,11 @@ export default class DriverHome extends React.Component {
         };
     }
 
-    _onRefresh() {
+    _onRefresh = async () =>{
         console.log("calling refresh control");
         this.setState({refreshing: true});
-        fetchData().then(() => {
-            this.setState({refreshing: false});
-        });
+        await this.renderJobs();
+        this.setState({refreshing: false})
     }
 
     renderJobs = async () => {
@@ -143,7 +142,7 @@ export default class DriverHome extends React.Component {
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh.bind(this)}
+                        onRefresh={this._onRefresh}
                     />
                 }
                 style={styles.container}>

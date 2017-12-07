@@ -11,7 +11,7 @@ import { TabNavigator } from 'react-navigation';
 
 const EnterJob = TabNavigator({
     Moving: {screen: MovingScreen,},
-    Hauling: {screen: DriverScreen,},
+    Hauling: {screen: HaulingScreen,},
 }, {
     tabBarPosition: 'bottom',
     animationEnabled: true,

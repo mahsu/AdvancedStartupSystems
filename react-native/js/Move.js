@@ -18,7 +18,6 @@ class Move extends React.Component {
         header: null,
     };
 
-
     constructor(props) {
         super(props);
 
@@ -47,7 +46,7 @@ class Move extends React.Component {
         let [lon, lat] = this.props.currentLoc;
         let body = Object.assign(this.state.details, {lon, lat});
         body.phone = this.props.phone;
-        navigate('ACCEPT',fakebody);
+        // navigate('ACCEPT',fakebody);
         try {
             let response = await fetch(endpoint + 'job/new', {
                 method: "PUT",
@@ -60,7 +59,7 @@ class Move extends React.Component {
 
             if (response.status === 200) {
 
-                var json = await response.body;
+                var json = await response.json();
                 navigate('ACCEPT',json);
 
                 return true;
