@@ -1,0 +1,6 @@
+{
+    "scripts": {
+      "postinstall": "cd api && npm install",
+      "start": "node ./api/bin/www"
+    }
+}
