@@ -24,19 +24,21 @@ router.post("/auth/phone", function (req, res, next) {
         .then((number) => {
             var phone = number.phoneNumber;
             User.findOne({phone}, (err, user) => {
-                if (res == null) {
+                console.log(user);
+                if (user == null) {
                     return res.sendStatus(500);
+                } else {
+                    Code.add(phone, (code) => {
+                        if (code) {
+                            console.log(code);
+                            return res.status(200).json({
+                                phone,
+                                type: user.type
+                            });
+                        }
+                        return res.sendStatus(500);
+                    });
                 }
-                Code.add(phone, (code) => {
-                    if (code) {
-                        console.log(code);
-                        return res.status(200).json({
-                            phone,
-                            type: user.type
-                        });
-                    }
-                    return res.sendStatus(500);
-                });
             })
         })
         .catch((error) => {
