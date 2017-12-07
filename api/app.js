@@ -13,7 +13,7 @@ var app = express();
 
 //mongoose setup
 var mongoose = require('mongoose');
-mongoose.connect(process.env.COMPOSE_URI || process.env.MONGOLAB_URI || 'mongodb://localhost/fiyah');
+mongoose.connect(process.env.COMPOSE_URI || process.env.MONGODB_URI || process.env.MONGOLAB_URI || 'mongodb://localhost/fiyah');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
