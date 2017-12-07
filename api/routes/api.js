@@ -63,8 +63,15 @@ router.post("/auth/code", function (req, res, next) {
 });
 
 
-router.get("/jobs", function (req, res, next) {
-
+router.get("/jobs/available", function (req, res, next) {
+    Job.find({mover: null}, function(err, user) {
+        if (err) {
+            console.log(err)
+            return res.sendStatus(500)
+        } else {
+            return res.json(user)
+        }
+    });
 });
 
 router.put('/user/new', function (req, res, next) {
