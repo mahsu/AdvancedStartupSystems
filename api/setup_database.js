@@ -85,15 +85,114 @@ const users = [
     }
 ];
 
+const jobs = [
+    {
+        "details": {
+            "numRooms": 2,
+            "startTime": "2017-12-06",
+            "endTime": "2017-12-10",
+            "maxPrice": 450,
+            "loc": {
+                "type": "Point",
+                "coordinates": [-73.9857, 40.7484]
+            },
+            "description": "Moving my couch"
+        },
+        "requester": "+16099073676",
+        "mover": "+19172708287",
+        "jobType": "Move"
+    },
+    {
+        "details": {
+            "numRooms": 1,
+            "startTime": "2017-12-05",
+            "endTime": "2017-12-07",
+            "maxPrice": 250,
+            "loc": {
+                "type": "Point",
+                "coordinates": [-73.8331, 40.7675]
+            },
+            "description": "Moving up in the world."
+        },
+        "requester": "+16099073676",
+        "mover": "+19172708287",
+        "jobType": "Move"
+    },
+    {
+        "details": {
+            "numRooms": 2,
+            "startTime": "2017-12-05",
+            "endTime": "2017-12-08",
+            "maxPrice": 350,
+            "loc": {
+                "type": "Point",
+                "coordinates": [-73.3857, 40.7584]
+            },
+            "description": "Moooving ice cream"
+        },
+        "requester": "+16099073676",
+        "mover": "+19172708287",
+        "jobType": "Move"
+    },
+    {
+        "details": {
+            "numRooms": 1,
+            "startTime": "2017-12-05",
+            "endTime": "2017-12-09",
+            "maxPrice": 150,
+            "loc": {
+                "type": "Point",
+                "coordinates": [-73.9965, 40.7295]
+            },
+            "description": "Movies"
+        },
+        "requester": "+16099073676",
+        "mover": "+19172708287",
+        "jobType": "Move"
+    },
+    {
+        "details": {
+            "numRooms": 2,
+            "startTime": "2017-12-05",
+            "endTime": "2017-12-07",
+            "maxPrice": 400,
+            "loc": {
+                "type": "Point",
+                "coordinates": [-73.9626, 40.8075]
+            },
+            "description": "Moose"
+        },
+        "requester": "+16099073676",
+        "mover": "+19172708287",
+        "jobType": "Move"
+    },
+    {
+        "details": {
+            "numRooms": 3,
+            "startTime": "2017-12-05",
+            "endTime": "2017-12-09",
+            "maxPrice": 750,
+            "loc": {
+                "type": "Point",
+                "coordinates": [-73.9626, 40.8075]
+            },
+            "description": "Melvin"
+        },
+        "requester": "+16099073676",
+        "mover": null,
+        "jobType": "Move"
+    }
+];
+
 Code.removeAll(() => {
     Job.removeAll(() => {
         User.removeAll(() => {
-            let newUsers = users.map((x) => {
-                new User(x);
-            });
             User.insertMany(users, (err) => {
                 if (err) console.log(err);
             });
+            Job.insertMany(jobs, (err) => {
+                if (err) console.log(err);
+            })
         })
     })
 });
