@@ -1,6 +1,7 @@
 {
     "scripts": {
       "postinstall": "cd api && npm install",
-      "start": "node ./api/bin/www"
+      "start": "node ./api/bin/www",
+      "test": "sleep 1000"
     }
 }
