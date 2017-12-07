@@ -3,6 +3,7 @@ import { View, StyleSheet,Text } from 'react-native';
 import MyMap from './MyMap';
 import MovingScreen  from './Move';
 import HaulingScreen from './Haul';
+import DriverScreen from './DriverHome';
 import { TabNavigator } from 'react-navigation';
 
 
@@ -10,7 +11,7 @@ import { TabNavigator } from 'react-navigation';
 
 const EnterJob = TabNavigator({
     Moving: {screen: MovingScreen,},
-    Hauling: {screen: HaulingScreen,},
+    Hauling: {screen: DriverScreen,},
 }, {
     tabBarPosition: 'bottom',
     animationEnabled: true,

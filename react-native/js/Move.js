@@ -11,12 +11,12 @@ export default class Move extends React.Component {
 
 
         this.state={
-            room: '',
+            numRooms: '',
             textLength: 0,
             startTime: 0,
             endTime: 0,
             maxPrice: 0,
-            jobDescription:""
+            description:""
         };
     }
     onChangeText(text){
@@ -76,7 +76,7 @@ export default class Move extends React.Component {
                         <Text style={[styles.left, {width: w}]}>Describe Your Job:</Text>
                     </View>
                     <View>
-                        <TextInput keyboardType={'numeric'} style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
+                        <TextInput style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
                                    placeholderTextColor={'#bac3e0'} onChangeText={this.onChangeText.bind(this)}
                                    underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
                         <Text style={{textAlign:"right", marginRight:20}}>{this.state.textLength}/120</Text>
