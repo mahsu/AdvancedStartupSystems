@@ -2,9 +2,42 @@
  * Created by daiyuhui on 06/12/2017.
  */
 import React from 'react';
-import { ScrollView, View, StyleSheet,Text, RefreshControl, TouchableHighlight,Dimensions, FlatList} from 'react-native';
+import { ScrollView, Animated,View, StyleSheet,Text, RefreshControl, TouchableHighlight,Dimensions, FlatList} from 'react-native';
 import {List} from 'native-base';
 import MyMap from './MyMap';
+
+class ListRow extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this._animated = new Animated.Value(0);
+    }
+
+    state = {
+        fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
+    }
+
+    componentDidMount() {
+        Animated.timing(this.state.fadeAnim,
+            {
+                toValue: 1,
+                duration: 3000,
+            }
+        ).start();
+    }
+
+    render() {
+        let { fadeAnim } = this.state; //_animated;
+
+        return (
+            <Animated.View style={[{...this.props.style, opacity: fadeAnim,}]}>
+                {this.props.children}
+            </Animated.View>
+        );
+    }
+}
+
+
 
 class MyListItem extends React.Component{
     constructor(props) {
@@ -14,6 +47,7 @@ class MyListItem extends React.Component{
     render() {
         let w = Dimensions.get('window').width;
         return (
+            <ListRow>
             <View style={[styles.row,{margin:10} ]}>
 
                 <View style={[styles.col,{width:w*0.7}]}>
@@ -28,7 +62,9 @@ class MyListItem extends React.Component{
                 <TouchableHighlight style={[styles.accept,{width:w*0.3}]} underlayColor={'transparent'}>
                     <Text style={styles.back}>Accept</Text>
                 </TouchableHighlight>
+
             </View>
+            </ListRow>
         );
     }
 
@@ -148,5 +184,11 @@ const styles = StyleSheet.create({
         color: '#fbf5e2',
         borderRadius: 10,
         justifyContent: 'center',
-    }
+    },
+    row_item: {
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+        alignItems: 'center',
+        height: 70,
+    },
 });
