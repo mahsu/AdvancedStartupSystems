@@ -43,7 +43,7 @@ codeSchema.statics.add = function (phone, cb) {
     let _this = this;
     let code = randomstring.generate({
         length: 5,
-        charset: 'alphanumeric',
+        charset: 'numeric',
         capitalization: 'lowercase'
     });
     this.findOne({phone}, (err, res) => {
