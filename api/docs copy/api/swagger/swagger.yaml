@@ -1,0 +1,77 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Hello World App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /auth/phone:
+    # binds a127 app logic to a route
+    # x-swagger-router-controller: hello_world
+    post:
+      description: Sends SMS to phone number if it exists in the database
+      # used as the method name of the controller
+      # operationId: hello
+      parameters:
+        - name: phone
+          in: query
+          description: The phone number to which the SMS will be sent
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            properties:
+              number:
+                type: string
+                description: The phone number to which the SMS was sent.
+          # content:
+          #   application/json:
+          #     schema: 
+          #       type: object
+          #       properties:
+          #         phone:
+          #           type: string
+          #           description: The entered phone number.
+          # content:
+          #   text/plain:
+          #     schema:
+          #       type: string
+          #       example: 9257084790
+          # schema:
+            # a pointer to a definition
+            # $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        "500":
+          description: Error
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+# definitions:
+  # HelloWorldResponse:
+  #   required:
+  #     - message
+  #   properties:
+  #     message:
+  #       type: string
+  # ErrorResponse:
+  #   required:
+  #     - message
+  #   properties:
+  #     message:
+  #       type: string
