@@ -9,6 +9,8 @@ import AcceptScreen from './js/Acceptance';
 import {StackNavigator} from 'react-navigation';
 import reduxApp from './js/redux/reducers';
 import {endpoint} from "./src/util";
+import DriverScreen from "./js/DriverHome";
+import {setPhone} from "./js/redux/actions";
 
 const AppNavigator = StackNavigator({
     ENTER_JOB: {screen: JobScreen},
@@ -17,7 +19,7 @@ const AppNavigator = StackNavigator({
 
 let store = createStore(reduxApp);
 
-const AUTH_STATES = Object.freeze({phone: 1, code: 2, auth: 3});
+const AUTH_STATES = Object.freeze({phone: 1, code: 2, auth: 3, driver: 4});
 
 export default class App extends React.Component {
     constructor(props) {
@@ -25,7 +27,7 @@ export default class App extends React.Component {
 
         this.state = {
             fontsAreLoaded: false,
-            authState: AUTH_STATES.auth,
+            authState: AUTH_STATES.phone,
             phone: ""
         }
     }
@@ -54,8 +56,10 @@ export default class App extends React.Component {
                 let responseJson = await response.json();
                 this.setState({
                     authState: AUTH_STATES.code,
-                    phone: responseJson.phone
+                    phone: responseJson.phone,
+                    type: responseJson.type,
                 });
+                store.dispatch(setPhone(responseJson.phone));
                 return true;
             } else {
                 return false;
@@ -78,9 +82,11 @@ export default class App extends React.Component {
             });
 
             if (response.status === 200) {
+                let newauthstate = this.state.type == "driver" ? AUTH_STATES.driver : AUTH_STATES.auth;
                 this.setState({
-                    authState: AUTH_STATES.auth,
-                    phone: ""
+                    authState: newauthstate,
+                    phone: "",
+                    type: ""
                 });
                 return true;
             } else {
@@ -107,6 +113,17 @@ export default class App extends React.Component {
     render() {
         if (!this.state.fontsAreLoaded) {
             return <View><Text>Loading</Text></View>;
+        }
+
+        if (this.state.authState === AUTH_STATES.driver) {
+            return (
+                <Provider store={store}>
+                    <Root>
+                        <DriverScreen/>
+                    </Root>
+                </Provider>
+
+            );
         }
         if (this.state.authState !== AUTH_STATES.auth) {
             return (

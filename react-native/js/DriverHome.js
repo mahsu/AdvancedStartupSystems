@@ -2,18 +2,55 @@
  * Created by daiyuhui on 06/12/2017.
  */
 import React from 'react';
-import { ScrollView, View, StyleSheet,Text, RefreshControl, TouchableHighlight,Dimensions, FlatList} from 'react-native';
+import { ScrollView, Animated,View, StyleSheet,Text, RefreshControl, TouchableHighlight,Dimensions, FlatList} from 'react-native';
 import {List} from 'native-base';
 import MyMap from './MyMap';
+import {endpoint} from "../src/util";
+
+class ListRow extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this._animated = new Animated.Value(0);
+    }
+
+    state = {
+        fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
+    }
+
+    componentDidMount() {
+        Animated.timing(this.state.fadeAnim,
+            {
+                toValue: 1,
+                duration: 3000,
+            }
+        ).start();
+    }
+
+    render() {
+        let { fadeAnim } = this.state; //_animated;
+
+        return (
+            <Animated.View style={[{...this.props.style, opacity: fadeAnim,}]}>
+                {this.props.children}
+            </Animated.View>
+        );
+    }
+}
+
+
 
 class MyListItem extends React.Component{
     constructor(props) {
         super(props);
+
     }
 
     render() {
+
         let w = Dimensions.get('window').width;
         return (
+            <ListRow>
             <View style={[styles.row,{margin:10} ]}>
 
                 <View style={[styles.col,{width:w*0.7}]}>
@@ -28,7 +65,9 @@ class MyListItem extends React.Component{
                 <TouchableHighlight style={[styles.accept,{width:w*0.3}]} underlayColor={'transparent'}>
                     <Text style={styles.back}>Accept</Text>
                 </TouchableHighlight>
+
             </View>
+            </ListRow>
         );
     }
 
@@ -40,9 +79,9 @@ export default class DriverHome extends React.Component {
     }
     constructor(props) {
         super(props);
-
+        this.renderJobs();
         this.state={
-            data: myJobs,
+            data: null,
             refreshing: false,
         };
     }
@@ -55,8 +94,48 @@ export default class DriverHome extends React.Component {
         });
     }
 
+    renderJobs = async () => {
+        try {
+            let response = await fetch(endpoint + '/jobs/available', {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.status === 200) {
+                let responseJson = await response.json();
+                console.log(responseJson.length);
+
+
+                var data = [];
+                for (var i=0; i< responseJson.length; i++) {
+                    var obj = {
+                        key: "Job ID "+ (i+1),
+                        numRooms: responseJson[i].details.numRooms,
+                        startTime:responseJson[i].details.startTime.split("T")[0],
+                        endTime:responseJson[i].details.endTime.split("T")[0],
+                        maxPrice: "$"+responseJson[i].details.maxPrice,
+                        description: responseJson[i].details.description
+                    }
+                    data.push(obj);
+
+                }
+
+                this.setState({
+                    data: data,
+                });
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    };
     render() {
-        var {navigate} = this.props.navigation;
 
         return (
 
@@ -73,7 +152,7 @@ export default class DriverHome extends React.Component {
 
                         data={this.state.data}
                         renderItem={({item}) => <MyListItem
-                            id={item.key}
+                            id={item.description}
                             price={item.maxPrice}
                             start={item.startTime}
                             end = {item.endTime}
@@ -91,7 +170,6 @@ const myJobs=[
     {key: 'Job3', numRooms: '1', startTime: '12:00pm', endTime:'12:45pm', maxPrice: '$40', description: 'xxx'},
     {key: 'Job4', numRooms: '3', startTime: '20:00pm', endTime:'21:00pm', maxPrice: '$50', description: 'zzz'},
     {key: 'Job5', numRooms: '6', startTime: '12:00pm', endTime:'13:40pm', maxPrice: '$650', description: 'xxx'},
-    {key: 'Job6', numRooms: '5', startTime: '12:00pm', endTime:'13:40pm', maxPrice: '$150', description: 'xxx'},
 ]
 const styles = StyleSheet.create({
     container: {
@@ -148,5 +226,11 @@ const styles = StyleSheet.create({
         color: '#fbf5e2',
         borderRadius: 10,
         justifyContent: 'center',
-    }
+    },
+    row_item: {
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+        alignItems: 'center',
+        height: 70,
+    },
 });

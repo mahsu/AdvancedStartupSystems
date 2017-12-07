@@ -20,7 +20,7 @@ produces:
 paths:
   /auth/phone:
     post:
-      description: Sends SMS to phone number if it exists in the database
+      description: Sends SMS (using Twilio) to phone number if it exists in the database
       parameters:
         - name: phone
           in: query
@@ -33,9 +33,12 @@ paths:
           schema:
             type: object
             properties:
-              number:
+              phone:
                 type: string
                 description: The phone number to which the SMS was sent.
+              type:
+                type: string
+                description: The type of user who submitted their phone number.
         "500":
           description: Error
   /auth/code:
@@ -148,5 +151,14 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            type: object
+            properties:
+              job:
+                type: string
+                description: The details of the job that was created.
+              mover:
+                type: string
+                description: The mover who was matched with the job.
         "500":
           description: Error

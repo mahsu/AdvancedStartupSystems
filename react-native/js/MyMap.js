@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
         alignSelf: 'stretch',
-        backgroundColor: '#222'
+        backgroundColor: '#d1e1ff'
     },
 
     // This style tells the map element to fill the entire space of its parent

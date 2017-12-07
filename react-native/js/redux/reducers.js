@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {SET_LOC} from "./actions";
+import {SET_LOC, SET_PHONE} from "./actions";
 
 function loc(state = [null, null], action) {
     switch (action.type) {
@@ -10,8 +10,18 @@ function loc(state = [null, null], action) {
     }
 }
 
+function phone(state = null, action) {
+    switch (action.type) {
+        case SET_PHONE:
+            return action.phone;
+        default:
+            return state
+    }
+}
+
 const reduxApp = combineReducers({
-    loc
+    loc,
+    phone
 });
 
 export default reduxApp;

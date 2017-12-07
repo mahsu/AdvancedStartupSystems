@@ -23,14 +23,31 @@ router.post("/auth/phone", function (req, res, next) {
         .fetch()
         .then((number) => {
             var phone = number.phoneNumber;
-            console.log(phone);
-            Code.add(phone, (code) => {
-                if (code) {
-                    console.log(code);
-                    return res.status(200).send(JSON.stringify({phone}));
+            User.findOne({phone}, (err, user) => {
+                console.log(user);
+                if (user == null) {
+                    return res.sendStatus(500);
+                } else {
+                    Code.add(phone, (code) => {
+                        if (code) {
+                            console.log(code);
+                            twilio.messages.create({
+                                from: config.twilio.from_phone,
+                                to: phone,
+                                body: "Verification code: " + code
+                            }).then((msg) => {
+                                console.log("Message sent");
+                                return res.status(200).json({
+                                    phone,
+                                    type: user.type
+                                })
+                            });
+                        } else {
+                            return res.sendStatus(500)
+                        }
+                    });
                 }
-                return res.sendStatus(500);
-            });
+            })
         })
         .catch((error) => {
             console.log(error);
@@ -54,54 +71,92 @@ router.post("/auth/code", function (req, res, next) {
 });
 
 
-router.get("/jobs", function (req, res, next) {
-
-});
-
-router.put('/user/new', function (req, res, next) {
-    let user = new User({
-        name: {
-            first: req.body.first,
-            last: req.body.last
-        },
-        email: req.body.email,
-        image: req.body.image,
-        phone: req.body.phone,
-        type: req.body.type,
-        busy: false
-    });
-
-    user.save((err) => {
+router.get("/jobs/available", function (req, res, next) {
+    Job.find({mover: null}, function (err, user) {
         if (err) {
-            return res.sendStatus(500)
+            console.log(err);
+            return res.sendStatus(500);
         } else {
-            return res.sendStatus(200)
+            return res.json(user)
         }
     });
 });
 
+
+router.put('/user/new', function (req, res, next) {
+    twilio.lookups.v1
+        .phoneNumbers(req.body.phone)
+        .fetch()
+        .then((number) => {
+            var phone = number.phoneNumber;
+            let user = new User({
+                name: {
+                    first: req.body.first,
+                    last: req.body.last
+                },
+                email: req.body.email,
+                image: req.body.image,
+                phone: phone,
+                type: req.body.type,
+                busy: false
+            });
+
+            user.save((err) => {
+                if (err) {
+                    return res.sendStatus(500)
+                } else {
+                    return res.sendStatus(200)
+                }
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            return res.sendStatus(500);
+        });
+});
+
 router.put('/job/new', function (req, res, next) {
-    let job = new Job({
-        details: {
-            numRooms: parseInt(req.body.numRooms),
-            startTime: new Date(req.body.startTime),
-            endTime: new Date(req.body.endTime),
-            maxPrice: parseInt(req.body.maxPrice),
-            loc: {
-                type: "Point",
-                coordinates: [parseFloat(req.body.lon), parseFloat(req.body.lat)], //[lon,lat]
+
+    User.findOne({type: "driver"}, (err, mover) => {
+        if (err) {
+            console.log(err);
+        }
+        if (mover == null) {
+            return res.sendStatus(500);
+        }
+        let job = new Job({
+            details: {
+                numRooms: parseInt(req.body.numRooms),
+                startTime: new Date(req.body.startTime),
+                endTime: new Date(req.body.endTime),
+                maxPrice: parseInt(req.body.maxPrice),
+                loc: {
+                    type: "Point",
+                    coordinates: [parseFloat(req.body.lon), parseFloat(req.body.lat)], //[lon,lat]
+                },
+                description: req.body.description
             },
-            description: req.body.description
-        },
-        requester: req.body.phone, //todo actual id
-        mover: null,//todo
-        jobType: {type: String}
+            requester: req.body.phone,
+            mover: mover.phone,
+            jobType: req.body.type
+        });
+        console.log(job);
+        mover.busy = true;
+        mover.save();
+        job.save((err) => {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(500)
+            } else {
+                console.log("response");
+                return res.status(200).json({
+                    job,
+                    mover
+                });
+            }
+        });
+
     });
-    console.log(job);
-    return res.status(200).json({status: true});
-    //create job in db
-    //match with mover
-    //return details of job + mover
 });
 
 router.put('/job/{jobid}', function (req, res, next) {
