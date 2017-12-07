@@ -5,6 +5,7 @@ import React from 'react';
 import { ScrollView, Animated,View, StyleSheet,Text, RefreshControl, TouchableHighlight,Dimensions, FlatList} from 'react-native';
 import {List} from 'native-base';
 import MyMap from './MyMap';
+import {endpoint} from "../src/util";
 
 class ListRow extends React.Component {
     constructor(props) {
@@ -42,9 +43,11 @@ class ListRow extends React.Component {
 class MyListItem extends React.Component{
     constructor(props) {
         super(props);
+
     }
 
     render() {
+
         let w = Dimensions.get('window').width;
         return (
             <ListRow>
@@ -76,7 +79,7 @@ export default class DriverHome extends React.Component {
     }
     constructor(props) {
         super(props);
-
+        this.renderJobs();
         this.state={
             data: myJobs,
             refreshing: false,
@@ -91,6 +94,46 @@ export default class DriverHome extends React.Component {
         });
     }
 
+    renderJobs = async () => {
+        try {
+            let response = await fetch(endpoint + '/jobs/available', {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.status === 200) {
+                let responseJson = await response.json();
+                console.log(responseJson.length);
+
+
+                var data = [];
+                for (var i=0; i< responseJson.length; i++) {
+                    var obj = {
+                        key: "Job ID "+ (i+1),
+                        numRooms: responseJson[i].details.numRooms,
+                        startTime:responseJson[i].details.startTime.split("T")[0],
+                        endTime:responseJson[i].details.endTime.split("T")[0],
+                        maxPrice: "$"+responseJson[i].details.maxPrice
+                    }
+                    data.push(obj);
+
+                }
+
+                this.setState({
+                    data: data,
+                });
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    };
     render() {
 
         return (
@@ -126,7 +169,6 @@ const myJobs=[
     {key: 'Job3', numRooms: '1', startTime: '12:00pm', endTime:'12:45pm', maxPrice: '$40', description: 'xxx'},
     {key: 'Job4', numRooms: '3', startTime: '20:00pm', endTime:'21:00pm', maxPrice: '$50', description: 'zzz'},
     {key: 'Job5', numRooms: '6', startTime: '12:00pm', endTime:'13:40pm', maxPrice: '$650', description: 'xxx'},
-    {key: 'Job6', numRooms: '5', startTime: '12:00pm', endTime:'13:40pm', maxPrice: '$150', description: 'xxx'},
 ]
 const styles = StyleSheet.create({
     container: {

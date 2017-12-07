@@ -99,7 +99,7 @@ const jobs = [
             "description": "Moving my couch"
         },
         "requester": "+16099073676",
-        "mover": "+19172708287",
+        "mover": null,
         "jobType": "Move"
     },
     {
@@ -115,7 +115,7 @@ const jobs = [
             "description": "Moving up in the world."
         },
         "requester": "+16099073676",
-        "mover": "+19172708287",
+        "mover": null,
         "jobType": "Move"
     },
     {
@@ -131,7 +131,7 @@ const jobs = [
             "description": "Moooving ice cream"
         },
         "requester": "+16099073676",
-        "mover": "+19172708287",
+        "mover": null,
         "jobType": "Move"
     },
     {
@@ -147,7 +147,7 @@ const jobs = [
             "description": "Movies"
         },
         "requester": "+16099073676",
-        "mover": "+19172708287",
+        "mover": null,
         "jobType": "Move"
     },
     {
@@ -163,7 +163,7 @@ const jobs = [
             "description": "Moose"
         },
         "requester": "+16099073676",
-        "mover": "+19172708287",
+        "mover": null,
         "jobType": "Move"
     },
     {
