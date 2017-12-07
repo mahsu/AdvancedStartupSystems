@@ -19,6 +19,15 @@ var jobSchema = new mongoose.Schema({
 });
 jobSchema.index({loc: '2dsphere'});
 
+jobSchema.statics.removeAll = function (cb) {
+    this.remove(function (err, res) {
+        if (err) {
+            console.log(err);
+        }
+        cb(res)
+    });
+};
+
 jobSchema.statics.findClosestJob = function(phone, point, cb) {
     var findParams = {
         mover: {

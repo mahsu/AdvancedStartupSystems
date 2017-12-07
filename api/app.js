@@ -49,6 +49,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-require("./models/code").removeAll();
+require("./setup_database")
 
 module.exports = app;

@@ -7,12 +7,12 @@ var codeSchema = new mongoose.Schema({
     code: {type: String}
 });
 
-codeSchema.statics.removeAll = function () {
+codeSchema.statics.removeAll = function (cb) {
     this.remove(function (err, res) {
         if (err) {
             console.log(err);
         }
-        return res;
+        cb(res)
     });
 };
 
