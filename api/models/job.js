@@ -13,10 +13,31 @@ var jobSchema = new mongoose.Schema({
         },
         description: {type: String} //todo validation
     },
-    requester: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    mover: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    requester: {type: String},
+    mover: {type: String, default: null},
     jobType: {type: String}
 });
+jobSchema.index({loc: '2dsphere'});
 
+jobSchema.statics.findClosestJob = function(phone, point, cb) {
+    var findParams = {
+        mover: {
+            $ne: phone
+        },
+        loc: {
+            $near: {
+                $geometry: point,
+                $maxDistance: 10000
+            }
+        }
+    };
 
+    this.find(findParams, (err, res) => {
+        if (err) {
+            console.log(err)
+        }
+        return cb(res);
+    })
+
+};
 module.exports = mongoose.model("Job", jobSchema);
