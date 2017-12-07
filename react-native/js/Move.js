@@ -47,8 +47,7 @@ class Move extends React.Component {
         let [lon, lat] = this.props.currentLoc;
         let body = Object.assign(this.state.details, {lon, lat});
         body.phone = this.props.phone;
-        console.log(body);
-
+        navigate('ACCEPT',fakebody);
         try {
             let response = await fetch(endpoint + 'job/new', {
                 method: "PUT",
@@ -61,7 +60,7 @@ class Move extends React.Component {
 
             if (response.status === 200) {
                 var json = await response.body;
-                navigate('ACCEPT');
+                navigate('ACCEPT',json);
                 return true;
             } else {
                 return false;
@@ -186,6 +185,41 @@ class Move extends React.Component {
 
         );
     };
+}
+
+const fakebody = {
+    "job": {
+        "__v": 0,
+        "requester": "null",
+        "_id": "5a28d6ed7e1290fbbddb820c",
+        "mover": "+19172708287",
+        "details": {
+            "numRooms": 5,
+            "startTime": "2017-12-07T05:43:45.474Z",
+            "endTime": "2017-12-07T05:43:45.474Z",
+            "maxPrice": 10,
+            "description": "jflljfg",
+            "loc": {
+                "coordinates": [
+                    40.755644,
+                    40.755644
+                ],
+                "type": "Point"
+            }
+        }
+    },
+    "mover": {
+        "_id": "5a28d6e77e1290fbbddb8204",
+        "__v": 0,
+        "image": "https://19jkon2dxx3g14btyo2ec2u9-wpengine.netdna-ssl.com/wp-content/uploads/2015/10/matt-trainer-rolfer-400x400.jpg",
+        "phone": "+19172708287",
+        "type": "driver",
+        "busy": true,
+        "name": {
+            "first": "Aleo",
+            "last": "Noble"
+        }
+    }
 }
 
 const styles = StyleSheet.create({

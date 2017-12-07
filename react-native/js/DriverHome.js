@@ -81,7 +81,7 @@ export default class DriverHome extends React.Component {
         super(props);
         this.renderJobs();
         this.state={
-            data: myJobs,
+            data: null,
             refreshing: false,
         };
     }
@@ -116,7 +116,8 @@ export default class DriverHome extends React.Component {
                         numRooms: responseJson[i].details.numRooms,
                         startTime:responseJson[i].details.startTime.split("T")[0],
                         endTime:responseJson[i].details.endTime.split("T")[0],
-                        maxPrice: "$"+responseJson[i].details.maxPrice
+                        maxPrice: "$"+responseJson[i].details.maxPrice,
+                        description: responseJson[i].details.description
                     }
                     data.push(obj);
 
@@ -151,7 +152,7 @@ export default class DriverHome extends React.Component {
 
                         data={this.state.data}
                         renderItem={({item}) => <MyListItem
-                            id={item.key}
+                            id={item.description}
                             price={item.maxPrice}
                             start={item.startTime}
                             end = {item.endTime}

@@ -10,21 +10,30 @@ export default class Accept extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state={
+            mover: props.navigation.state.params.mover,
+            job:props.navigation.state.params.job
+        };
+
     }
 
 
+
+
     render() {
-        var {navigate} = this.props.navigation;
+
+        var name = this.state.mover.name.first + " " + this.state.mover.name.last;
+
         return (
-            <View>
+            <View style={{backgroundColor: '#727272'}}>
                 <View style={[{margin: 20},styles.row]}>
                     <Image source={require('../resource/celebrate.png')} style={styles.left}/>
-                    <Text style={{fontSize: 30, paddingLeft: 20, fontWeight: 'bold'}}>Aleo Accepts!</Text>
+                    <Text style={{fontSize: 30, paddingLeft: 20, fontWeight: 'bold'}}>{this.state.mover.name.first} Accepts!</Text>
                 </View>
 
-                <Image source={require('../resource/profile.jpg')}
+                <Image source={{uri: this.state.mover.image}}
                        style={{width:Dimensions.get('window').width, height: 250 }}></Image>
-                <Text style={{margin: 30}}>Aleo has accepted your job. Please make sure to coordinate with him.</Text>
+                <Text style={{margin: 30}}>{name} has accepted your job. Please make sure to coordinate with him.</Text>
 
                 <View style={styles.row}>
                     <Image source = {require('../resource/truck.png')} style={styles.left}></Image>
@@ -33,11 +42,11 @@ export default class Accept extends React.Component {
                 </View>
                 <View style={styles.row}>
                     <Image source = {require('../resource/phone.png')} style={styles.left}></Image>
-                    <Text style={styles.t}>967-244-2145</Text>
+                    <Text style={styles.t}>{this.state.mover.phone}</Text>
                 </View>
                 <View style={styles.row}>
                     <Image source = {require('../resource/money.png')} style={styles.left}></Image>
-                    <Text style={styles.t}>$450</Text>
+                    <Text style={styles.t}>{"$"+this.state.job.details.maxPrice}</Text>
                 </View>
                 <Text style={styles.back}>Message</Text>
             </View>
@@ -62,7 +71,7 @@ const styles = StyleSheet.create({
     t: {
         marginLeft: 20,
         fontSize: 20,
-        color: '#010c30',
+        color: '#fbf5e2',
         textAlign: 'center'
     },
     left: {
