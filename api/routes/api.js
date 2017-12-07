@@ -109,9 +109,12 @@ router.put('/user/new', function (req, res, next) {
 
 router.put('/job/new', function (req, res, next) {
 
-    User.findOne({type: "driver", busy: false}, (err, mover) => {
+    User.findOne({type: "driver"}, (err, mover) => {
         if (err) {
             console.log(err);
+        }
+        if (mover == null) {
+            return res.sendStatus(500);
         }
         let job = new Job({
             details: {
@@ -137,6 +140,7 @@ router.put('/job/new', function (req, res, next) {
                 console.log(err);
                 return res.sendStatus(500)
             } else {
+                console.log("response");
                 return res.status(200).json({
                     job,
                     mover

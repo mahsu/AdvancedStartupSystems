@@ -60,7 +60,8 @@ class Move extends React.Component {
             });
 
             if (response.status === 200) {
-                var json = await response.body;
+                var json = await response.json();
+                console.log(json);
                 navigate('ACCEPT');
                 return true;
             } else {
