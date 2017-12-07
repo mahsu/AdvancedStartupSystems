@@ -14,5 +14,14 @@ var userSchema = new mongoose.Schema({
     busy: {type: Boolean}
 });
 
+userSchema.statics.matchFreeDriver = function(cb) {
+    this.findOne({type: "driver"}, (err, res) => {
+        if (err) {
+            console.log(err)
+        }
+        cb(res);
+    })
+};
+
 
 module.exports = mongoose.model("User", userSchema);

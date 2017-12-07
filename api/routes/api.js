@@ -23,14 +23,18 @@ router.post("/auth/phone", function (req, res, next) {
         .fetch()
         .then((number) => {
             var phone = number.phoneNumber;
-            console.log(phone);
-            Code.add(phone, (code) => {
-                if (code) {
-                    console.log(code);
-                    return res.status(200).send(JSON.stringify({phone}));
+            User.findOne({phone}, (err, res) => {
+                if (res == null) {
+                    return res.sendStatus(500);
                 }
-                return res.sendStatus(500);
-            });
+                Code.add(phone, (code) => {
+                    if (code) {
+                        console.log(code);
+                        return res.status(200).json({phone});
+                    }
+                    return res.sendStatus(500);
+                });
+            })
         })
         .catch((error) => {
             console.log(error);
@@ -59,25 +63,35 @@ router.get("/jobs", function (req, res, next) {
 });
 
 router.put('/user/new', function (req, res, next) {
-    let user = new User({
-        name: {
-            first: req.body.first,
-            last: req.body.last
-        },
-        email: req.body.email,
-        image: req.body.image,
-        phone: req.body.phone,
-        type: req.body.type,
-        busy: false
-    });
+    twilio.lookups.v1
+        .phoneNumbers(req.body.phone)
+        .fetch()
+        .then((number) => {
+            var phone = number.phoneNumber;
+            let user = new User({
+                name: {
+                    first: req.body.first,
+                    last: req.body.last
+                },
+                email: req.body.email,
+                image: req.body.image,
+                phone: phone,
+                type: req.body.type,
+                busy: false
+            });
 
-    user.save((err) => {
-        if (err) {
-            return res.sendStatus(500)
-        } else {
-            return res.sendStatus(200)
-        }
-    });
+            user.save((err) => {
+                if (err) {
+                    return res.sendStatus(500)
+                } else {
+                    return res.sendStatus(200)
+                }
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            return res.sendStatus(500);
+        });
 });
 
 router.put('/job/new', function (req, res, next) {
