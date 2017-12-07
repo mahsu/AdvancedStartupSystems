@@ -1,0 +1,164 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: FIYAHHH App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /auth/phone:
+    post:
+      description: Sends SMS (using Twilio) to phone number if it exists in the database
+      parameters:
+        - name: phone
+          in: query
+          description: The phone number to which the SMS will be sent
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            properties:
+              phone:
+                type: string
+                description: The phone number to which the SMS was sent.
+              type:
+                type: string
+                description: The type of user who submitted their phone number.
+        "500":
+          description: Error
+  /auth/code:
+    post:
+      description: Sends login status to phone number if the entered code was valid.
+      parameters:
+        - name: phone
+          in: query
+          description: The phone number to which the status will be sent.
+          required: true
+          type: string
+        - name: code
+          in: query
+          description: The code used to verify the user.
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Error
+  /user/new:
+    post:
+      description: Creates a new User entry in the database.
+      parameters:
+        - name: first
+          in: query
+          description: The first name of the new user.
+          required: true
+          type: string
+        - name: last
+          in: query
+          description: The last name of the new user.
+          required: true
+          type: string
+        - name: email
+          in: query
+          description: The email of the new user.
+          required: true
+          type: string
+        - name: image
+          in: query
+          description: The image used for the new user.
+          required: false
+          type: string
+        - name: phone
+          in: query
+          description: The phone number of the new user.
+          required: false
+          type: string
+        - name: type
+          in: query
+          description: The type of new user (i.e., requester or driver)
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Error
+  /job/new:
+    post:
+      description: Creates a new Job entry in the database.
+      parameters:
+        - name: numRooms
+          in: query
+          description: The number of rooms for the job.
+          required: true
+          type: string
+        - name: startTime
+          in: query
+          description: The start time for the job.
+          required: true
+          type: string
+        - name: endTime
+          in: query
+          description: The expected end time for the job.
+          required: true
+          type: string
+        - name: maxPrice
+          in: query
+          description: The maximum price of the job.
+          required: false
+          type: string
+        - name: lon
+          in: query
+          description: The longitude of the job's location.
+          required: false
+          type: string
+        - name: lat
+          in: query
+          description: The lattitude of the job's location.
+          required: false
+          type: string
+        - name: description
+          in: query
+          description: The description of the job.
+          required: false
+          type: string
+        - name: phone
+          in: query
+          description: The phone number of the user initiating the job.
+          required: false
+          type: string
+        - name: type
+          in: query
+          description: The type of the job.
+          required: false
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            properties:
+              job:
+                type: string
+                description: The details of the job that was created.
+              mover:
+                type: string
+                description: The mover who was matched with the job.
+        "500":
+          description: Error
