@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     },
 });
 
+
 const mapStateToProps = function (state) {
     return {
         currentLoc: state.loc,
@@ -64,6 +65,7 @@ class MyMap extends React.Component {
             </View>
         );
     }
+
 }
 
 export default connect(

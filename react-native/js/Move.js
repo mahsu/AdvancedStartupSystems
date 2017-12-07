@@ -22,6 +22,7 @@ class Move extends React.Component {
         super(props);
 
         this.state={
+
             details: {
                 numRooms: '',
                 startTime: null,
@@ -165,11 +166,13 @@ class Move extends React.Component {
                         <Text style={[styles.left, {width: w}]}>Describe Your Job:</Text>
                     </View>
                     <View>
+
                         <TextInput keyboardType={'numeric'} style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
                                    placeholderTextColor={'#bac3e0'} onChangeText={(text) => this.onChangeDescription(text)}
                                    underlineColorAndroid={'rgba(186,195,224,0.5)'}
                                    value={this.state.details.description}
                                     maxLength={120}/>
+
                         <Text style={{textAlign:"right", marginRight:20}}>{this.state.textLength}/120</Text>
                     </View>
 
