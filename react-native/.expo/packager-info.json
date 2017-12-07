@@ -1,5 +1,9 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
+<<<<<<< HEAD
   "packagerPid": 42639
+=======
+  "packagerPid": 58304
+>>>>>>> 175d72fb817ddc8900a712a4ca9fa249ca757f3a
 }

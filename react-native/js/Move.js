@@ -1,32 +1,102 @@
 import React from 'react';
-import { View, StyleSheet,Text, TextInput, TouchableHighlight,Dimensions} from 'react-native';
+import { View, StyleSheet,Text, TextInput, TouchableHighlight,Dimensions, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import MyMap from './MyMap';
+import {endpoint} from "../src/util";
+import {connect} from "react-redux";
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import moment from 'moment';
 
-export default class Move extends React.Component {
+const mapStateToProps = function(state){
+    return {
+        currentLoc: state.loc,
+    }
+};
+
+class Move extends React.Component {
     static navigationOptions = {
         header: null,
-    }
+    };
+
+
     constructor(props) {
         super(props);
 
-
         this.state={
-            numRooms: '',
+
+            details: {
+                numRooms: '',
+                startTime: null,
+                endTime: null,
+                maxPrice: 0,
+                description:"",
+            },
             textLength: 0,
-            startTime: 0,
-            endTime: 0,
-            maxPrice: 0,
-            description:""
         };
     }
-    onChangeText(text){
+
+    onChangeDescription = (text) => {
         this.setState({
-            textLength: text.length
+            textLength: text.length,
+            details: {...this.state.details, description: text}
         });
-    }
+    };
+
+    onSubmit = async () => {
+        var {navigate} = this.props.navigation;
+        let [lon, lat] = this.props.currentLoc;
+        let body = Object.assign(this.state.details, {lon, lat});
+        console.log(body);
+
+        try {
+            let response = await fetch(endpoint + 'job/new', {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (response.status === 200) {
+                var json = await response.body;
+                navigate('ACCEPT');
+                return true;
+            } else {
+                return false;
+            }
+        } catch(error) {
+            console.error(error);
+            return false;
+        }
+    };
+
+    _showStartTimePicker = () => {
+            Keyboard.dismiss();
+            this.setState({isStartTimePickerVisible: true});
+    };
+
+    _showEndTimePicker = () => {
+        Keyboard.dismiss();
+        this.setState({ isEndTimePickerVisible: true });
+    };
+
+    _hideStartTimePicker = () => this.setState({ isStartTimePickerVisible: false });
+
+    _hideEndTimePicker = () => this.setState({ isEndTimePickerVisible: false});
+
+    _handleStartTimePicked = (date) => {
+        this.setState({details: {...this.state.details, startTime: moment(date)}});
+        this._hideStartTimePicker();
+    };
+
+    _handleEndTimePicked = (date) => {
+        this.setState({details: {...this.state.details, endTime: moment(date)}});
+        this._hideEndTimePicker();
+    };
 
     render() {
         var {navigate} = this.props.navigation;
+        let {startTime, endTime} = this.state.details;
         let w = Dimensions.get('window').width;
         return (
             <View style={styles.container}>
@@ -39,7 +109,8 @@ export default class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"4"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                    onChangeText={(text) => this.setState({details: {...this.state.details, numRooms: text}})}/>
                     </View>
 
                 </View>
@@ -49,7 +120,16 @@ export default class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"12:30 PM"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                   onFocus={this._showStartTimePicker}
+                                   value={startTime ? startTime.format('h:mm A') : ''}
+                                    />
+                        <DateTimePicker
+                            isVisible={this.state.isStartTimePickerVisible}
+                            onConfirm={this._handleStartTimePicked}
+                            onCancel={this._hideStartTimePicker}
+                            mode={'time'}
+                        />
                     </View>
 
                 </View>
@@ -59,7 +139,16 @@ export default class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={styles.codeInput} placeholder={"14:00 PM"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                    onFocus={this._showEndTimePicker}
+                                   value={endTime ? endTime.format('h:mm A') : ''}
+                                    />
+                        <DateTimePicker
+                            isVisible={this.state.isEndTimePickerVisible}
+                            onConfirm={this._handleEndTimePicked}
+                            onCancel={this._hideEndTimePicker}
+                            mode={'time'}
+                        />
                     </View>
                 </View>
                 <View style={styles.row}>
@@ -68,7 +157,8 @@ export default class Move extends React.Component {
                     </View>
                     <View>
                         <TextInput keyboardType={'numeric'} style={styles.price} placeholder={"$450"}
-                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+                                   placeholderTextColor={'#bac3e0'} underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                    onChangeText={(text) => {this.setState({details: {...this.state.details, maxPrice: text}})}}/>
                     </View>
                 </View>
                 <View style={[styles.col]}>
@@ -76,17 +166,22 @@ export default class Move extends React.Component {
                         <Text style={[styles.left, {width: w}]}>Describe Your Job:</Text>
                     </View>
                     <View>
-                        <TextInput style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
-                                   placeholderTextColor={'#bac3e0'} onChangeText={this.onChangeText.bind(this)}
-                                   underlineColorAndroid={'rgba(186,195,224,0.5)'}/>
+
+                        <TextInput keyboardType={'numeric'} style={[styles.codeInput,{width: w}]} placeholder={"eg: moving sofa"}
+                                   placeholderTextColor={'#bac3e0'} onChangeText={(text) => this.onChangeDescription(text)}
+                                   underlineColorAndroid={'rgba(186,195,224,0.5)'}
+                                   value={this.state.details.description}
+                                    maxLength={120}/>
+
                         <Text style={{textAlign:"right", marginRight:20}}>{this.state.textLength}/120</Text>
                     </View>
 
                 </View>
-                <TouchableHighlight onPress={() => navigate('ACCEPT')} underlayColor={'transparent'}>
+                <TouchableHighlight onPress={() => this.onSubmit()} underlayColor={'transparent'}>
                     <Text style={styles.back}>SEND</Text>
                 </TouchableHighlight>
             </View>
+
         );
     };
 }
@@ -148,3 +243,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     }
 });
+
+export default connect(
+    mapStateToProps
+)(Move)
